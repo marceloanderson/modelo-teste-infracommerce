@@ -64,5 +64,5 @@ gulp.task('watch', function () {
 	gulp.watch(paths.images, ['images']);
 });
 
-gulp.task('default', ['connect', 'watch', 'scripts', 'js', 'sass', 'images', 'html']);
+gulp.task('default', ['watch', 'scripts', 'sass', 'images', 'html']);
 // gulp.task('build', ['default', 'images']);
