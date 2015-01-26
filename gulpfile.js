@@ -8,10 +8,11 @@ var gulp		= require('gulp'),
 	sass		= require('gulp-ruby-sass'),
 	connect		= require('gulp-connect'),
 	changed		= require('gulp-changed'),
-	ignore		= require('gulp-ignore');
+	ignore		= require('gulp-ignore'),
+	rename      = require("gulp-rename");
 
 var paths = {
-		scripts: ['src/js/plugins/*.js','src/js/app.js'],
+		scripts: ['src/js/app.js','src/js/plugins/*.js'],
 		sass: 'src/sass/**/*.scss',
 		html: 'src/**/*.html',
 		images: 'src/images/**/*'
@@ -21,7 +22,7 @@ gulp.task('scripts', function () {
 	return gulp.src(paths.scripts)
 		.pipe(plumber())
 		.pipe(uglify('app.min.js', {
-			outSourceMap: true,
+			'sourcemap=none': true,
 			basePath: 'src/js/'
 		}))
 		.pipe(gulp.dest('build/js'))
@@ -32,17 +33,19 @@ gulp.task('sass', function () {
 	return gulp.src(paths.sass)
 		.pipe(plumber())
 		.pipe(sass({
-			// sourcemap: true,
+			'sourcemap=none': true,
 			noCache: true,
 			style:'compressed'
 		}))
+		.pipe(rename({ suffix: '.min' }))
 		.pipe(gulp.dest('build/css'))
-		.pipe(ignore.exclude('**/*.map'))
+		// .pipe(ignore.exclude('**/*.map'))
 		.pipe(connect.reload());
 });
 
 gulp.task('html', function () {
 	return gulp.src(paths.html)
+		.pipe(gulp.dest('build/'))
 		.pipe(connect.reload());
 });
 
@@ -50,10 +53,10 @@ gulp.task('images', function () {
 	return gulp.src(paths.images)
 		.pipe(plumber())
 		.pipe(changed('build/images'))
-		.pipe(imagemin({
-			optimizationLevel: 5,
-			progressive: true
-		}))
+		// .pipe(imagemin({
+		// 	optimizationLevel: 5,
+		// 	progressive: true
+		// }))
 		.pipe(gulp.dest('build/images'));
 });
 
